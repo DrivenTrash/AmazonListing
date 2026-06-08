@@ -1,3 +1,22 @@
+/**
+ * Script-Name: Amazon Autofiller
+ * Version: 1.6
+ * Unterstützte Vorlagen: APPAREL_PIN, ART_CRAFT_KIT, BACKPACK, BED_LINEN, BLANKET, CARRIER_BAG_CASE, DECORATIVE_MAGNET, DESK_PAD, DISHWARE_BOWL, DISPLAY_ALBUM, DOLL_CLOTHING, DRESS, DRINKING_CUP, FIGURINE, HOBBIES, HOME, KEYCHAIN, LAMP, MINIATURE_TOY_BUILDING, MINIATURE_TOY_FURNISHIN, MODEL, MONEY_BANK, MOUSE_PAD, NON_RIDING_TOY_VEHICLE, PILLOW, PRETEND_PLAY_TOY, PUZZLES, STICKER_DECAL, STORAGE_BOX, TABLETOP_GAME, THERMOS, TOTE_BAG, TOWEL, TOY_BUILDING_BLOCK, TOY_FIGURE, TOY_GUN, TOYS_AND_GAMES, WALL_ART
+ * Autor: Valentin Gerdon
+ * Letzte Änderung: 2026-06-08
+ * Zweck:
+ * - Erweitert für DRINKING_CUP, DISPLAY_ALBUM, DISCHWARE_BOWL, TOY_BUILDING_BLOCK, WALL_ART, MINIATURE_TOY_BUILDING, TOY_GUN
+ * 
+ * Changelog:
+ * - 1.5 Erweitert Für ART_CRAFT_KIT, HOBBIES, ADVENT_CALENDAR, DRESS, PRETEND_PLAY_TOY, MINIATURE_TOY_FURNISHIN
+ * - 1.4 Erweitert für DOLL_CLOTHING, BACKPACK, DESK_PAD, HOME, DECORATIVE_MAGNET, BED_LINEN, TOWEL, PUZZLES, PILLOW, BLANKET, STICKER_DECAL, TOYS_AND_GAMES, LAMP, THERMOS
+ * - 1.3 Erweitert für KEYCHAIN, MOUSE_PAD, TABLETOP_GAME, NON_RIDING_TOY_VEHICLE, CARRIER_BAG_CASE, TOTE_BAG
+ * - 1.2.1 Alles auf Zentimeter umgestellt, da neuer Export
+ * - 1.2: Erweitert für APPAREL_PIN, MODEL. STORAGE_BOX
+ * - 1.1: Erweitert für FIGURINE und MONEY_BANK
+ * - 1.0: Skalierbare Architektur
+ */
+
 const firstDataRow = 7;
 
 function main(workbook: ExcelScript.Workbook) {
@@ -8,7 +27,7 @@ function main(workbook: ExcelScript.Workbook) {
     const ctx: Context = {
         headers: values[3],
         productType: sheet.getName().replace("Vorlage-", ""),
-        barcodes: values.slice(firstDataRow - 1).map(row => row[10])
+        barcodes: values.slice(firstDataRow - 1).map(row => row[values[3].indexOf("external_product_id#1.value")])
     };
 
     for (const rule of Rules) {
@@ -66,12 +85,12 @@ const Rules: Rule[] = [
     {
         headerName: "package_level#1.value",
         value: "Einheit",
-        appliesTo: ["TOY_FIGURE", "MONEY_BANK", "FIGURINE", "MODEL", "STORAGE_BOX", "MOUSE_PAD", "TABLETOP_GAME", "NON_RIDING_TOY_VEHICLE", "DOLL_CLOTHING", "DESK_PAD", "HOME", "DECORATIVE_MAGNET", "BED_LINEN", "TOWEL", "PUZZLES", "PILLOW", "BLANKET", "STICKER_DECAL", "TOYS_AND_GAMES", "LAMP", "THERMOS", "ART_CRAFT_KIT", "HOBBIES", "ADVENT_CALENDAR", "PRETEND_PLAY_TOY", "MINIATURE_TOY_FURNISHIN"]
+        appliesTo: ["TOY_FIGURE", "MONEY_BANK", "FIGURINE", "MODEL", "STORAGE_BOX", "MOUSE_PAD", "TABLETOP_GAME", "NON_RIDING_TOY_VEHICLE", "DOLL_CLOTHING", "DESK_PAD", "HOME", "DECORATIVE_MAGNET", "BED_LINEN", "TOWEL", "PUZZLES", "PILLOW", "BLANKET", "STICKER_DECAL", "TOYS_AND_GAMES", "LAMP", "THERMOS", "ART_CRAFT_KIT", "HOBBIES", "ADVENT_CALENDAR", "PRETEND_PLAY_TOY", "MINIATURE_TOY_FURNISHIN", "DRINKING_CUP", "DISPLAY_ALBUM", "DISHWARE_BOWL", "TOY_BUILDING_BLOCK", "WALL_ART", "MINIATURE_TOY_BUILDING", "TOY_GUN"]
     },
     {
         headerName: "is_trade_item_orderable_unit#1.value",
         value: "Ja",
-        appliesTo: ["TOY_FIGURE", "MONEY_BANK", "FIGURINE", "MODEL", "STORAGE_BOX", "MOUSE_PAD", "TABLETOP_GAME", "NON_RIDING_TOY_VEHICLE", "DOLL_CLOTHING", "DESK_PAD", "HOME", "DECORATIVE_MAGNET", "BED_LINEN", "TOWEL", "PUZZLES", "PILLOW", "BLANKET", "STICKER_DECAL", "TOYS_AND_GAMES", "LAMP", "THERMOS", "ART_CRAFT_KIT", "HOBBIES", "ADVENT_CALENDAR", "PRETEND_PLAY_TOY", "MINIATURE_TOY_FURNISHIN"]
+        appliesTo: ["TOY_FIGURE", "MONEY_BANK", "FIGURINE", "MODEL", "STORAGE_BOX", "MOUSE_PAD", "TABLETOP_GAME", "NON_RIDING_TOY_VEHICLE", "DOLL_CLOTHING", "DESK_PAD", "HOME", "DECORATIVE_MAGNET", "BED_LINEN", "TOWEL", "PUZZLES", "PILLOW", "BLANKET", "STICKER_DECAL", "TOYS_AND_GAMES", "LAMP", "THERMOS", "ART_CRAFT_KIT", "HOBBIES", "ADVENT_CALENDAR", "PRETEND_PLAY_TOY", "MINIATURE_TOY_FURNISHIN", "DRINKING_CUP", "DISPLAY_ALBUM", "DISHWARE_BOWL", "TOY_BUILDING_BLOCK", "WALL_ART", "MINIATURE_TOY_BUILDING", "TOY_GUN"]
     },
     {
         headerName: "cost_price#1.currency",
@@ -101,17 +120,17 @@ const Rules: Rule[] = [
     {
         headerName: "is_assembly_required#1.value",
         value: "Nein",
-        appliesTo: ["TOY_FIGURE", "TABLETOP_GAME", "TOYS_AND_GAMES", "HOBBIES", "MINIATURE_TOY_FURNISHIN"]
+        appliesTo: ["TOY_FIGURE", "TABLETOP_GAME", "TOYS_AND_GAMES", "HOBBIES", "MINIATURE_TOY_FURNISHIN", "TOY_BUILDING_BLOCK", "MINIATURE_TOY_BUILDING", "TOY_GUN"]
     },
     {
         headerName: "unit_count#1.value",
         value: 1,
-        appliesTo: ["TOY_FIGURE", "FIGURINE", "MODEL", "STORAGE_BOX", "TABLETOP_GAME", "NON_RIDING_TOY_VEHICLE", "DOLL_CLOTHING", "BACKPACK", "BED_LINEN", "PUZZLES", "PILLOW", "BLANKET", "STICKER_DECAL", "TOYS_AND_GAMES", "HOBBIES", "PRETEND_PLAY_TOY", "MINIATURE_TOY_FURNISHIN"]
+        appliesTo: ["TOY_FIGURE", "FIGURINE", "MODEL", "STORAGE_BOX", "TABLETOP_GAME", "NON_RIDING_TOY_VEHICLE", "DOLL_CLOTHING", "BACKPACK", "BED_LINEN", "PUZZLES", "PILLOW", "BLANKET", "STICKER_DECAL", "TOYS_AND_GAMES", "HOBBIES", "PRETEND_PLAY_TOY", "MINIATURE_TOY_FURNISHIN", "DRINKING_CUP", "DISPLAY_ALBUM", "DISHWARE_BOWL", "TOY_BUILDING_BLOCK", "TOY_GUN"]
     },
     {
         headerName: "unit_count#1.type.value",
         value: "stück",
-        appliesTo: ["TOY_FIGURE", "FIGURINE", "MODEL", "STORAGE_BOX", "TABLETOP_GAME", "NON_RIDING_TOY_VEHICLE", "DOLL_CLOTHING", "BACKPACK", "BED_LINEN", "PUZZLES", "PILLOW", "BLANKET", "STICKER_DECAL", "TOYS_AND_GAMES", "HOBBIES", "PRETEND_PLAY_TOY", "MINIATURE_TOY_FURNISHIN"]
+        appliesTo: ["TOY_FIGURE", "FIGURINE", "MODEL", "STORAGE_BOX", "TABLETOP_GAME", "NON_RIDING_TOY_VEHICLE", "DOLL_CLOTHING", "BACKPACK", "BED_LINEN", "PUZZLES", "PILLOW", "BLANKET", "STICKER_DECAL", "TOYS_AND_GAMES", "HOBBIES", "PRETEND_PLAY_TOY", "MINIATURE_TOY_FURNISHIN", "DRINKING_CUP", "DISPLAY_ALBUM", "DISHWARE_BOWL", "TOY_BUILDING_BLOCK", "TOY_GUN"]
     },
     {
         headerName: "street_date#1.value",
@@ -119,82 +138,82 @@ const Rules: Rule[] = [
             const today = new Date();
             return "'" + today.toISOString().split("T")[0];
         },
-        appliesTo: ["TOY_FIGURE", "APPAREL_PIN", "MOUSE_PAD", "TABLETOP_GAME", "NON_RIDING_TOY_VEHICLE", "DOLL_CLOTHING", "DESK_PAD", "PUZZLES", "TOYS_AND_GAMES", "HOBBIES", "PRETEND_PLAY_TOY", "MINIATURE_TOY_FURNISHIN"]
+        appliesTo: ["TOY_FIGURE", "APPAREL_PIN", "MOUSE_PAD", "TABLETOP_GAME", "NON_RIDING_TOY_VEHICLE", "DOLL_CLOTHING", "DESK_PAD", "PUZZLES", "TOYS_AND_GAMES", "HOBBIES", "PRETEND_PLAY_TOY", "MINIATURE_TOY_FURNISHIN", "TOY_BUILDING_BLOCK", "TOY_GUN"]
     },
     {
         headerName: "manufacturer_minimum_age#1.value",
         value: 168,
-        appliesTo: ["TOY_FIGURE", "MODEL", "TABLETOP_GAME", "NON_RIDING_TOY_VEHICLE", "DOLL_CLOTHING", "PUZZLES", "TOYS_AND_GAMES", "HOBBIES", "PRETEND_PLAY_TOY", "MINIATURE_TOY_FURNISHIN"]
+        appliesTo: ["TOY_FIGURE", "MODEL", "TABLETOP_GAME", "NON_RIDING_TOY_VEHICLE", "DOLL_CLOTHING", "PUZZLES", "TOYS_AND_GAMES", "HOBBIES", "PRETEND_PLAY_TOY", "MINIATURE_TOY_FURNISHIN", "TOY_BUILDING_BLOCK", "TOY_GUN"]
     },
     {
         headerName: "manufacturer_maximum_age#1.value",
         value: 1200,
-        appliesTo: ["TOY_FIGURE", "TOYS_AND_GAMES"]
+        appliesTo: ["TOY_FIGURE", "TOYS_AND_GAMES", "TOY_BUILDING_BLOCK", "TOY_GUN"]
     },
     {
         headerName: "item_length_width_height#1.height.unit",
         value: "Zentimeter",
-        appliesTo: ["TOY_FIGURE", "MONEY_BANK", "FIGURINE", "STORAGE_BOX", "TOTE_BAG"]
+        appliesTo: ["TOY_FIGURE", "MONEY_BANK", "FIGURINE", "STORAGE_BOX", "TOTE_BAG", "DISPLAY_ALBUM", "MINIATURE_TOY_BUILDING", "TOY_GUN"]
     },
     {
         headerName: "item_length_width_height#1.length.unit",
         value: "Zentimeter",
-        appliesTo: ["TOY_FIGURE", "MONEY_BANK", "FIGURINE", "STORAGE_BOX", "TOTE_BAG"]
+        appliesTo: ["TOY_FIGURE", "MONEY_BANK", "FIGURINE", "STORAGE_BOX", "TOTE_BAG", "DISPLAY_ALBUM", "MINIATURE_TOY_BUILDING", "TOY_GUN"]
     },
     {
         headerName: "item_length_width_height#1.width.unit",
         value: "Zentimeter",
-        appliesTo: ["TOY_FIGURE", "MONEY_BANK", "FIGURINE", "STORAGE_BOX", "TOTE_BAG"]
+        appliesTo: ["TOY_FIGURE", "MONEY_BANK", "FIGURINE", "STORAGE_BOX", "TOTE_BAG", "DISPLAY_ALBUM", "MINIATURE_TOY_BUILDING", "TOY_GUN"]
     },
     {
         headerName: "warranty_description#1.value",
         value: "Keine",
-        appliesTo: ["TOY_FIGURE", "MOUSE_PAD", "NON_RIDING_TOY_VEHICLE", "DOLL_CLOTHING", "DESK_PAD", "PUZZLES", "TOYS_AND_GAMES", "PRETEND_PLAY_TOY", "MINIATURE_TOY_FURNISHIN"]
+        appliesTo: ["TOY_FIGURE", "MOUSE_PAD", "NON_RIDING_TOY_VEHICLE", "DOLL_CLOTHING", "DESK_PAD", "PUZZLES", "TOYS_AND_GAMES", "PRETEND_PLAY_TOY", "MINIATURE_TOY_FURNISHIN", "TOY_BUILDING_BLOCK", "MINIATURE_TOY_BUILDING", "TOY_GUN"]
     },
     {
         headerName: "rtip_safety_warning#1.value",
         value: "Keine",
-        appliesTo: ["TOY_FIGURE", "MODEL", "TABLETOP_GAME", "NON_RIDING_TOY_VEHICLE", "DOLL_CLOTHING", "PUZZLES", "STICKER_DECAL", "TOYS_AND_GAMES", "HOBBIES", "PRETEND_PLAY_TOY", "MINIATURE_TOY_FURNISHIN"]
+        appliesTo: ["TOY_FIGURE", "MODEL", "TABLETOP_GAME", "NON_RIDING_TOY_VEHICLE", "DOLL_CLOTHING", "PUZZLES", "STICKER_DECAL", "TOYS_AND_GAMES", "HOBBIES", "PRETEND_PLAY_TOY", "MINIATURE_TOY_FURNISHIN", "TOY_BUILDING_BLOCK", "MINIATURE_TOY_BUILDING", "TOY_GUN"]
     },
     {
         headerName: "batteries_required#1.value",
         value: "Nein",
-        appliesTo: ["TOY_FIGURE", "MONEY_BANK", "FIGURINE", "APPAREL_PIN", "STORAGE_BOX", "KEYCHAIN", "MOUSE_PAD", "TABLETOP_GAME", "NON_RIDING_TOY_VEHICLE", "TOTE_BAG", "CARRIER_BAG_CASE", "DOLL_CLOTHING", "BACKPACK", "DESK_PAD", "HOME", "DECORATIVE_MAGNET", "PILLOW", "BLANKET", "STICKER_DECAL", "TOYS_AND_GAMES", "LAMP", "THERMOS", "HOBBIES", "ADVENT_CALENDAR", "DRESS", "PRETEND_PLAY_TOY", "MINIATURE_TOY_FURNISHIN"]
+        appliesTo: ["TOY_FIGURE", "MONEY_BANK", "FIGURINE", "APPAREL_PIN", "STORAGE_BOX", "KEYCHAIN", "MOUSE_PAD", "TABLETOP_GAME", "NON_RIDING_TOY_VEHICLE", "TOTE_BAG", "CARRIER_BAG_CASE", "DOLL_CLOTHING", "BACKPACK", "DESK_PAD", "HOME", "DECORATIVE_MAGNET", "PILLOW", "BLANKET", "STICKER_DECAL", "TOYS_AND_GAMES", "LAMP", "THERMOS", "HOBBIES", "ADVENT_CALENDAR", "DRESS", "PRETEND_PLAY_TOY", "MINIATURE_TOY_FURNISHIN", "DRINKING_CUP", "DISPLAY_ALBUM", "DISHWARE_BOWL", "TOY_BUILDING_BLOCK", "WALL_ART", "MINIATURE_TOY_BUILDING", "TOY_GUN"]
     },
     {
         headerName: "eu_toys_safety_directive_language#1.value",
         value: "Englisch",
-        appliesTo: ["TOY_FIGURE", "MODEL", "TABLETOP_GAME", "NON_RIDING_TOY_VEHICLE", "DOLL_CLOTHING", "PUZZLES", "TOYS_AND_GAMES", "HOBBIES", "PRETEND_PLAY_TOY", "MINIATURE_TOY_FURNISHIN"]
+        appliesTo: ["TOY_FIGURE", "MODEL", "TABLETOP_GAME", "NON_RIDING_TOY_VEHICLE", "DOLL_CLOTHING", "PUZZLES", "TOYS_AND_GAMES", "HOBBIES", "PRETEND_PLAY_TOY", "MINIATURE_TOY_FURNISHIN", "TOY_BUILDING_BLOCK", "MINIATURE_TOY_BUILDING", "TOY_GUN"]
     },
     {
         headerName: "eu_toys_safety_directive_language#2.value",
         value: "Deutsch",
-        appliesTo: ["TOY_FIGURE", "MODEL", "TABLETOP_GAME", "NON_RIDING_TOY_VEHICLE", "DOLL_CLOTHING", "PUZZLES", "TOYS_AND_GAMES", "HOBBIES", "PRETEND_PLAY_TOY", "MINIATURE_TOY_FURNISHIN"]
+        appliesTo: ["TOY_FIGURE", "MODEL", "TABLETOP_GAME", "NON_RIDING_TOY_VEHICLE", "DOLL_CLOTHING", "PUZZLES", "TOYS_AND_GAMES", "HOBBIES", "PRETEND_PLAY_TOY", "MINIATURE_TOY_FURNISHIN", "TOY_BUILDING_BLOCK", "MINIATURE_TOY_BUILDING", "TOY_GUN"]
     },
     {
         headerName: "eu_toys_safety_directive_age_warning#1.value",
         value: "Nicht geeignet für Kinder unter 14 Jahren",
-        appliesTo: ["TOY_FIGURE", "MODEL", "TABLETOP_GAME", "NON_RIDING_TOY_VEHICLE", "DOLL_CLOTHING", "PUZZLES", "TOYS_AND_GAMES", "HOBBIES", "PRETEND_PLAY_TOY", "MINIATURE_TOY_FURNISHIN"]
+        appliesTo: ["TOY_FIGURE", "MODEL", "TABLETOP_GAME", "NON_RIDING_TOY_VEHICLE", "DOLL_CLOTHING", "PUZZLES", "TOYS_AND_GAMES", "HOBBIES", "PRETEND_PLAY_TOY", "MINIATURE_TOY_FURNISHIN", "TOY_BUILDING_BLOCK", "MINIATURE_TOY_BUILDING", "TOY_GUN"]
     },
     {
         headerName: "eu_toys_safety_directive_warning#1.value",
         value: "Kein Warnhinweis zutreffend",
-        appliesTo: ["TOY_FIGURE", "MODEL", "TABLETOP_GAME", "NON_RIDING_TOY_VEHICLE", "DOLL_CLOTHING", "PUZZLES", "TOYS_AND_GAMES", "HOBBIES", "PRETEND_PLAY_TOY", "MINIATURE_TOY_FURNISHIN"]
+        appliesTo: ["TOY_FIGURE", "MODEL", "TABLETOP_GAME", "NON_RIDING_TOY_VEHICLE", "DOLL_CLOTHING", "PUZZLES", "TOYS_AND_GAMES", "HOBBIES", "PRETEND_PLAY_TOY", "MINIATURE_TOY_FURNISHIN", "TOY_BUILDING_BLOCK", "MINIATURE_TOY_BUILDING", "TOY_GUN"]
     },
     {
         headerName: "number_of_items#1.value",
         value: 1,
-        appliesTo: ["MONEY_BANK", "FIGURINE", "MOUSE_PAD", "HOME", "DECORATIVE_MAGNET", "BED_LINEN", "TOWEL", "PILLOW", "BLANKET", "STICKER_DECAL", "LAMP"]
+        appliesTo: ["MONEY_BANK", "FIGURINE", "MOUSE_PAD", "HOME", "DECORATIVE_MAGNET", "BED_LINEN", "TOWEL", "PILLOW", "BLANKET", "STICKER_DECAL", "LAMP", "MINIATURE_TOY_BUILDING"]
     },
     {
         headerName: "color#1.standardized_values#1",
         value: "Mehrfarbig",
-        appliesTo: ["APPAREL_PIN", "KEYCHAIN", "TABLETOP_GAME", "TOTE_BAG", "CARRIER_BAG_CASE", "BACKPACK", "THERMOS", "DRESS"]
+        appliesTo: ["APPAREL_PIN", "KEYCHAIN", "TABLETOP_GAME", "TOTE_BAG", "CARRIER_BAG_CASE", "BACKPACK", "THERMOS", "DRESS", "DISPLAY_ALBUM"]
     },
     {
         headerName: "color#1.value",
         value: "Mehrfarbig",
-        appliesTo: ["MONEY_BANK", "FIGURINE", "NON_RIDING_TOY_VEHICLE", "HOME", "BED_LINEN", "TOWEL", "PILLOW", "BLANKET", "STICKER_DECAL", "TOYS_AND_GAMES", "LAMP", "ART_CRAFT_KIT", "ADVENT_CALENDAR", "MINIATURE_TOY_FURNISHIN", "DOLL_CLOTHING"]
+        appliesTo: ["MONEY_BANK", "FIGURINE", "NON_RIDING_TOY_VEHICLE", "HOME", "BED_LINEN", "TOWEL", "PILLOW", "BLANKET", "STICKER_DECAL", "TOYS_AND_GAMES", "LAMP", "ART_CRAFT_KIT", "ADVENT_CALENDAR", "MINIATURE_TOY_FURNISHIN", "DOLL_CLOTHING", "WALL_ART", "TOY_FIGURE"]
     },
     {
         headerName: "is_fragile#1.value",
@@ -204,7 +223,7 @@ const Rules: Rule[] = [
     {
         headerName: "supplier_declared_dg_hz_regulation#1.value",
         value: "Nicht zutreffend",
-        appliesTo: ["MONEY_BANK", "FIGURINE", "APPAREL_PIN", "MODEL", "STORAGE_BOX", "KEYCHAIN", "MOUSE_PAD", "TABLETOP_GAME", "NON_RIDING_TOY_VEHICLE", "TOTE_BAG", "CARRIER_BAG_CASE", "DOLL_CLOTHING", "BACKPACK", "DESK_PAD", "HOME", "DECORATIVE_MAGNET", "BED_LINEN", "BLANKET", "STICKER_DECAL", "TOYS_AND_GAMES", "LAMP", "THERMOS", "PILLOW", "HOBBIES", "ADVENT_CALENDAR", "PRETEND_PLAY_TOY", "MINIATURE_TOY_FURNISHIN"]
+        appliesTo: ["MONEY_BANK", "FIGURINE", "APPAREL_PIN", "MODEL", "STORAGE_BOX", "KEYCHAIN", "MOUSE_PAD", "TABLETOP_GAME", "NON_RIDING_TOY_VEHICLE", "TOTE_BAG", "CARRIER_BAG_CASE", "DOLL_CLOTHING", "BACKPACK", "DESK_PAD", "HOME", "DECORATIVE_MAGNET", "BED_LINEN", "BLANKET", "STICKER_DECAL", "TOYS_AND_GAMES", "LAMP", "THERMOS", "PILLOW", "HOBBIES", "ADVENT_CALENDAR", "PRETEND_PLAY_TOY", "MINIATURE_TOY_FURNISHIN", "DRINKING_CUP", "DISPLAY_ALBUM", "DISHWARE_BOWL", "TOY_BUILDING_BLOCK", "MINIATURE_TOY_BUILDING", "TOY_GUN"]
     },
     {
         headerName: "department#1.value",
@@ -287,32 +306,32 @@ const Rules: Rule[] = [
     {
         headerName: "target_audience_keyword#1.value",
         value: "Unisex – Erwachsene",
-        appliesTo: ["TOY_FIGURE", "MODEL", "TABLETOP_GAME", "DOLL_CLOTHING", "PUZZLES", "TOYS_AND_GAMES", "HOBBIES", "PRETEND_PLAY_TOY", "MINIATURE_TOY_FURNISHIN"]
+        appliesTo: ["TOY_FIGURE", "MODEL", "TABLETOP_GAME", "DOLL_CLOTHING", "PUZZLES", "TOYS_AND_GAMES", "HOBBIES", "PRETEND_PLAY_TOY", "MINIATURE_TOY_FURNISHIN", "TOY_BUILDING_BLOCK", "TOY_GUN", "NON_RIDING_TOY_VEHICLE"]
     },
     {
         headerName: "age_range_description#1.value",
         value: "Erwachsene",
-        appliesTo: ["MODEL", "TABLETOP_GAME", "NON_RIDING_TOY_VEHICLE", "TOTE_BAG", "DOLL_CLOTHING", "BACKPACK", "TOYS_AND_GAMES", "HOBBIES", "DRESS", "PRETEND_PLAY_TOY", "MINIATURE_TOY_FURNISHIN"]
+        appliesTo: ["MODEL", "TABLETOP_GAME", "NON_RIDING_TOY_VEHICLE", "TOTE_BAG", "DOLL_CLOTHING", "BACKPACK", "TOYS_AND_GAMES", "HOBBIES", "DRESS", "PRETEND_PLAY_TOY", "MINIATURE_TOY_FURNISHIN", "TOY_BUILDING_BLOCK", "MINIATURE_TOY_BUILDING", "TOY_GUN"]
     },
     {
         headerName: "item_dimensions#1.length.unit",
         value: "Zentimeter",
-        appliesTo: ["MODEL", "NON_RIDING_TOY_VEHICLE", "TOYS_AND_GAMES", "HOBBIES", "PRETEND_PLAY_TOY", "MINIATURE_TOY_FURNISHIN"]
+        appliesTo: ["MODEL", "NON_RIDING_TOY_VEHICLE", "TOYS_AND_GAMES", "HOBBIES", "PRETEND_PLAY_TOY", "MINIATURE_TOY_FURNISHIN", "TOY_BUILDING_BLOCK"]
     },
     {
         headerName: "item_dimensions#1.width.unit",
         value: "Zentimeter",
-        appliesTo: ["MODEL", "NON_RIDING_TOY_VEHICLE", "TOYS_AND_GAMES", "HOBBIES", "PRETEND_PLAY_TOY", "MINIATURE_TOY_FURNISHIN"]
+        appliesTo: ["MODEL", "NON_RIDING_TOY_VEHICLE", "TOYS_AND_GAMES", "HOBBIES", "PRETEND_PLAY_TOY", "MINIATURE_TOY_FURNISHIN", "TOY_BUILDING_BLOCK"]
     },
     {
         headerName: "item_dimensions#1.height.unit",
         value: "Zentimeter",
-        appliesTo: ["MODEL", "NON_RIDING_TOY_VEHICLE", "TOYS_AND_GAMES", "HOBBIES", "PRETEND_PLAY_TOY", "MINIATURE_TOY_FURNISHIN"]
+        appliesTo: ["MODEL", "NON_RIDING_TOY_VEHICLE", "TOYS_AND_GAMES", "HOBBIES", "PRETEND_PLAY_TOY", "MINIATURE_TOY_FURNISHIN", "TOY_BUILDING_BLOCK"]
     },
     {
         headerName: "number_of_boxes#1.value",
         value: 1,
-        appliesTo: ["MODEL", "STORAGE_BOX", "MOUSE_PAD", "HOME", "STICKER_DECAL", "TOYS_AND_GAMES", "MINIATURE_TOY_FURNISHIN"]
+        appliesTo: ["MODEL", "STORAGE_BOX", "MOUSE_PAD", "HOME", "STICKER_DECAL", "TOYS_AND_GAMES", "MINIATURE_TOY_FURNISHIN", "TOY_GUN"]
     },
     {
         headerName: "target_gender#1.value",
@@ -392,12 +411,12 @@ const Rules: Rule[] = [
     {
         headerName: "item_length_width#1.length.unit",
         value: "Zentimeter",
-        appliesTo: ["DOLL_CLOTHING", "TOWEL", "PUZZLES", "PILLOW", "PILLOW", "BLANKET"]
+        appliesTo: ["DOLL_CLOTHING", "TOWEL", "PUZZLES", "PILLOW", "PILLOW", "BLANKET", "WALL_ART"]
     },
     {
         headerName: "item_length_width#1.width.unit",
         value: "Zentimeter",
-        appliesTo: ["DOLL_CLOTHING", "TOWEL", "PUZZLES", "PILLOW", "PILLOW", "BLANKET"]
+        appliesTo: ["DOLL_CLOTHING", "TOWEL", "PUZZLES", "PILLOW", "PILLOW", "BLANKET", "WALL_ART"]
     },
     {
         headerName: "water_resistance_level#1.value",
@@ -467,17 +486,17 @@ const Rules: Rule[] = [
     {
         headerName: "capacity#1.unit",
         value: "Milliliter",
-        appliesTo: ["THERMOS"]
+        appliesTo: ["THERMOS", "DRINKING_CUP"]
     },
     {
         headerName: "item_width_height#1.height.unit",
         value: "Zentimeter",
-        appliesTo: ["THERMOS"]
+        appliesTo: ["THERMOS", "DRINKING_CUP", "DISHWARE_BOWL"]
     },
     {
         headerName: "item_width_height#1.width.unit",
         value: "Zentimeter",
-        appliesTo: ["THERMOS"]
+        appliesTo: ["THERMOS", "DRINKING_CUP", "DISHWARE_BOWL"]
     },
     {
         headerName: "apparel_size#1.size_system",
@@ -523,6 +542,11 @@ const Rules: Rule[] = [
         headerName: "neck#1.neck_style#1.value",
         value: "Fledermausärmel",
         appliesTo: ["DRESS"]
+    },
+    {
+        headerName: "is_refurbished#1.value",
+        value: "Nein",
+        appliesTo: ["DRINKING_CUP", "DISHWARE_BOWL"]
     },
 ];
 
